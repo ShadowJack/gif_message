@@ -11,7 +11,8 @@ class Api::V1::UsersController < ApplicationController
 
   # when we create new user we get vk_id from :id field
   def create
-    respond_with :api, :v1, User.create(vk_id: user_params[:id])
+    logger.debug user_params[:vk_id]
+    respond_with :api, :v1, User.create(vk_id: user_params[:vk_id])
   end
 
   # when we update user we get vk_id from :id field
@@ -31,6 +32,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:id, :vk_id)
+    params.require('user').permit(:id, :vk_id)
   end
 end

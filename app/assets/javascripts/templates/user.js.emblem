@@ -1,3 +1,4 @@
 .row
-  .col
-h2 Hi! I'm a user #{model.id}
+  .col-xs-12
+    h2 Hi! I'm a user #{model.vkId}
+outlet

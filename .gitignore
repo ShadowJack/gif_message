@@ -17,5 +17,7 @@
 
 /public/assets
 
-.idea
+.idea/
+
+.DS_Store
 

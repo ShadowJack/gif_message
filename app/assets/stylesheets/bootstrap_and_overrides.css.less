@@ -11,11 +11,15 @@
 @fontAwesomeTtfPath: font-url("fontawesome-webfont.ttf");
 @fontAwesomeSvgPath: font-url("fontawesome-webfont.svg#fontawesomeregular");
 
+// Fix font path to assets root
+// TODO: find out should I precompile assets or not
+@icon-font-path: "../../";
+
 // Font Awesome
 @import "fontawesome/font-awesome";
 
 // Glyphicons
-//@import "twitter/bootstrap/glyphicons.less";
+@import "twitter/bootstrap/glyphicons.less";
 
 // Your custom LESS stylesheets goes here
 //
