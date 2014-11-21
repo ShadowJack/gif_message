@@ -4,6 +4,10 @@
 #= require ember
 #= require ember-data
 #= require twitter/bootstrap
+#= require gumhelper
+#= require omggif
+#= require Animated_GIF
+#= require VideoShooter
 #= require_self
 #= require_tree .
 
