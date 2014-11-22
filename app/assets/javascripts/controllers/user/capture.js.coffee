@@ -16,7 +16,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend
     else
       gumHelper = window.GumHelper
       console.log 'gumHelper is ready!'
-      gumHelper.startVideoStreaming((err, stream, videoElement, width, height) ->
+      gumHelper.startVideoStreaming((err, stream, videoElement, width, height) =>
         if err
           console.log "Error! Can't get video from user"
           #TODO: render error partial
@@ -31,12 +31,17 @@ GifMessage.UserCaptureController = Ember.Controller.extend
 
         gifWidth = 135
         gifHeight = 101
-        cropDimens =
-          VideoShooter.getCropDimensions(width, height, gifWidth, gifHeight)
-
-        @set('videoShooter', new VideoShooter(videoElement, gifWidth, gifHeight, width, height, cropDimens))
+        cropDimens = VideoShooter.getCropDimensions(width, height, gifWidth, gifHeight)
+        videoShooter = new VideoShooter(videoElement, gifWidth, gifHeight, width, height, cropDimens)
+        @set('videoShooter', videoShooter)
       )
 
   actions:
-    onShooting: ->
-      #TODO: copy implementation from meatspace usage of getScreenshot function but with manual pause
+    onShooting:( ->
+      console.log 'Sooting stars'
+      @shootGif((picture)->
+        console.log('Got gif picture: ', picture)
+      , 10, 0.2, (progress)->
+        console.log('Wow, such cool! So progress: ', progress)
+      )
+    )
