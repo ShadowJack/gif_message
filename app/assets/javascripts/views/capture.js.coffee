@@ -3,12 +3,12 @@ GifMessage.CaptureView = Ember.View.extend
 
   didInsertElement: ->
     $('.progress').width(@get('controller.gifWidth'))
-    #TODO: get value from user database and save it on record action
+
     slider = $('#time_slider').slider(
       min: 1.0
       max: 5.0
       step: 0.5
-      value: 2.0
+      value: @get('controller.gifLength') || 2.0
       formatter: (value)-> value + ' сек.'
     )
     slider.on('slide', (evt) =>
@@ -17,6 +17,9 @@ GifMessage.CaptureView = Ember.View.extend
     colorpicker = $('#colorPicker').colorpicker().on('changeColor', (ev)->
       $('#text_preview').css('color', ev.color.toHex())
     )
+    curr_color = @get('controller.gifFontColor') || '#FFF'
+    $('#text_preview').css('color', curr_color)
+
     @get('controller').on('gifIsReady', this, =>
       publishView = GifMessage.PublishView.create()
       container = Ember.View.views['capture_container']

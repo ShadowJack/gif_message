@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  validates :vk_id, presence: true
+  self.primary_key = :vk_id
   has_many :gifs
 
 end

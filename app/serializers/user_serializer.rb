@@ -1,3 +1,4 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :vk_id
+  attributes :vk_id, :gif_length, :gif_font_color
+
 end

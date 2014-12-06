@@ -12,8 +12,10 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
   animatedImage: null
 
   init: ->
-    @set('gifFontColor', @get('controllers.user.model.gifFontColor'))
-    @set('gifLength', @get('controllers.user.model.gifLength'))
+    color = @get('controllers.user.model.gifFontColor') || '#FFF'
+    @set('gifFontColor', color)
+    length = @get('controllers.user.model.gifLength') || 2.0
+    @set('gifLength', length)
 
     if !navigator.getMedia
       console.log('User media is not supported!');
@@ -43,7 +45,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
         $('#text_preview').show()
         $('#record_btn').prop('disabled', false)
       )
-#TODO: избавиться от id в модели рэйлс и эмбера
+
   actions:
     onShooting:( ->
       unless @get('videoElement') || @get('cameraStream')
