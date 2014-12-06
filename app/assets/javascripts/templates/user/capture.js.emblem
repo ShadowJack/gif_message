@@ -1,13 +1,1 @@
-.row
-  .col-xs-12
-    .article
-      #placeholder
-        h4.center-block Please allow video streaming in your browser
-      #video_container
-.row.controls
-  .col-xs-3.col-xs-offset-3
-    button.btn.btn-danger.center-block id='record_btn' aria-label='Record' click='onShooting'
-      span.glyphicon.glyphicon-record aria-hidden='true' click='onShooting'
-  .col-xs-3
-    button.btn.btn-primary.center-block id='play_btn' aria-label='Play'
-      span.glyphicon.glyphicon-play aria-hidden='true'
+GifMessage.CaptureContainerView elementId="capture_container"

@@ -18,6 +18,9 @@ gem 'therubyracer',  platforms: :ruby
 gem 'less-rails'
 gem 'twitter-bootstrap-rails'
 
+# Use bootstrap-slider in project
+gem 'bootstrap-slider-rails'
+
 # Use Ember.js for client-side MVC
 gem 'ember-rails'
 gem 'ember-source'

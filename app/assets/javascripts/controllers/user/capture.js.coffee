@@ -1,16 +1,20 @@
-GifMessage.UserCaptureController = Ember.Controller.extend
+GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
+  needs: 'user'
 
-  videoShooter: null
+  gifWidth: 500            # gif width on screen and image itself
+  gifHeight: 375           # gif height on screen and image itself
+  gifLength: 2.0           # gif time length
+  gifText: ''              # text to be displayed on gif
+  gifFontColor: '#FFF'     # color of the text on the gif
 
-  shootGif: (callback, numFrames, interval, progressCallback)->
-    videoShooter = @get('videoShooter')
-    unless videoShooter
-      console.log "Can't get videoShooter"
-      callback('')
-      return
-    videoShooter.getShot(callback, numFrames, interval, progressCallback)
+  videoElement: null
+  cameraStream: null
+  animatedImage: null
 
   init: ->
+    @set('gifFontColor', @get('controllers.user.model.gifFontColor'))
+    @set('gifLength', @get('controllers.user.model.gifLength'))
+
     if !navigator.getMedia
       console.log('User media is not supported!');
     else
@@ -23,25 +27,73 @@ GifMessage.UserCaptureController = Ember.Controller.extend
           return
 
         $('#placeholder').hide()
-        $(videoElement).width('500px')
-        $(videoElement).height('470px')
+
+        $(videoElement).width(@get('gifWidth'))
+        videoHeight = Math.ceil(@get('gifWidth') / width * height)
+        @set('gifHeight', videoHeight)
+        $(videoElement).height(videoHeight + 'px')
+
         $(videoElement).addClass('img-thumbnail')
+        @set 'videoElement', videoElement
+        @set 'cameraStream', stream
+
         $('#video_container').append(videoElement)
         $('#video_container').show()
-
-        gifWidth = 135
-        gifHeight = 101
-        cropDimens = VideoShooter.getCropDimensions(width, height, gifWidth, gifHeight)
-        videoShooter = new VideoShooter(videoElement, gifWidth, gifHeight, width, height, cropDimens)
-        @set('videoShooter', videoShooter)
+        $('.progress-container').show()
+        $('#text_preview').show()
+        $('#record_btn').prop('disabled', false)
       )
-
+#TODO: избавиться от id в модели рэйлс и эмбера
   actions:
     onShooting:( ->
-      console.log 'Sooting stars'
-      @shootGif((picture)->
-        console.log('Got gif picture: ', picture)
-      , 10, 0.2, (progress)->
-        console.log('Wow, such cool! So progress: ', progress)
+      unless @get('videoElement') || @get('cameraStream')
+        console.log "Can't get videoElement or stream from camera "
+        return
+
+      user = @get('controllers.user.model')
+      user.set('gifLength', @get('gifLength'))
+      user.set('gifFontColor', @get('gifFontColor'))
+      user.save()
+
+      $('#backcount').slideDown('fast', =>
+        setTimeout(=>
+          $('#backcount p').text('2')
+          setTimeout(=>
+            $('#backcount p').text('1')
+            setTimeout(=>
+              $('#backcount').slideUp()
+
+              progressbarClass = 'tr' + @get('gifLength')*10
+              $('.progress-bar').addClass(progressbarClass)
+              $('.progress-bar').attr('aria-valuenow', '100')
+              $('.progress-bar').width('100%')
+
+              console.log 'Shooting stars'
+              gifshot.createGIF(
+                'gifWidth': @get('gifWidth')
+                'gifHeight': @get('gifHeight')
+                'keepCameraOn': true
+                'cameraStream': @get('cameraStream')
+                'numFrames': 10*@get('gifLength')
+                'text': @get('gifText')
+                'fontSize': '28px'
+                'minFontSize': '16px'
+                'resizeFont': true
+                'fontColor': @get('gifFontColor')
+              ,(result) =>
+                console.log "I'm finished!"
+                if result.error
+                  console.log result.errorCode, ':', result.errorMsg
+                else
+                  image = result.image
+                  animatedImage = document.createElement('img')
+                  animatedImage.src = image
+                  @set('animatedImage', animatedImage)
+                  @trigger('gifIsReady')
+              )
+            ,700)
+          ,700)
+        ,700)
       )
+
     )

@@ -1,3 +1,4 @@
+//-- capture-gif template
 #video_container,
 #placeholder {
   float: none;
@@ -13,8 +14,108 @@
   height: 300px;
 }
 
-.controls {
+#backcount {
+  display: none;
+  position: absolute;
+  width: 500px;
+  height: 50px;
+  background: rgba(236, 236, 236, 0.5);
+  line-height: 50px;
+
+  p {
+    margin:auto auto;
+    width: 20px;
+    font-size: 34px;
+    text-align: center;
+    color: #e9e9e9;
+  }
+
+}
+
+#text_preview {
+  float: none;
+  display: none;
+  position: relative;
+  margin: 0 auto;
+  width: 480px;
+  height: 40px;
+  top: -50px;
+  margin-bottom: -40px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 28px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.progress-container{
+  display: none;
+
+  .progress {
+    width:500px;
+    height: 5px;
+    margin: 2px auto 5px;
+  }
+}
+
+//different length progressbar animations
+.transition-progressbar(@length){
+  -webkit-transition: width @length linear;
+  -moz-transition: width @length linear;
+  -ms-transition: width @length linear;
+  -o-transition: width @length linear;
+  transition: width @length linear;
+}
+.tr10 {
+  .transition-progressbar(1s) !important;
+}
+.tr15 {
+  .transition-progressbar(1.5s) !important;
+}
+.tr20 {
+  .transition-progressbar(2s) !important;
+}
+.tr25 {
+  .transition-progressbar(2.5s) !important;
+}
+.tr30 {
+  .transition-progressbar(3s) !important;
+}
+.tr35 {
+  .transition-progressbar(3.5s) !important;
+}
+.tr40 {
+  .transition-progressbar(4s) !important;
+}
+.tr45 {
+  .transition-progressbar(4.5s) !important;
+}
+.tr50 {
+  .transition-progressbar(5s) !important;
+}
+
+.record {
   button {
     width: 100px;
   }
+}
+
+.controls {
+
+  margin: 20px auto;
+
+  #time_slider .slider-selection{
+    background: #666666;
+
+  }
+
+
+//-- publish template
+#gif_container {
+  float: none;
+  margin: 0 auto;
+}
+
+
 }
