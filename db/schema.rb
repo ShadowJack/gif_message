@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141115095018) do
+ActiveRecord::Schema.define(version: 20141204210457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 20141115095018) do
 
   create_table "users", force: true do |t|
     t.string "vk_id"
+    t.float  "gif_length"
+    t.string "gif_font_color"
   end
 
 end

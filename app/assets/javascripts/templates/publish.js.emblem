@@ -1,0 +1,5 @@
+.row
+  .col-xs-12
+    .article
+      #gif_container
+

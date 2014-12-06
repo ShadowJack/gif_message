@@ -7,5 +7,6 @@ GifMessage.Router.reopen
 GifMessage.Router.map ()->
   @resource 'user', path: '/:id', ->
     @route 'capture'
-    @route 'album'
+    @resource 'album'
+    #@resource 'publication', path: '/:id/publiction/:gif'
 
