@@ -1,5 +1,5 @@
 .row
   .col-xs-12
-    h2 Hi! I'm a user #{model.id}
+    h2 Gif messenger
 #content_root
   outlet

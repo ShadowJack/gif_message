@@ -82,8 +82,14 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
                 'minFontSize': '16px'
                 'resizeFont': true
                 'fontColor': @get('gifFontColor')
+                'progressCallback': (captureProgress) ->
+                  if captureProgress == 1
+                    $('#splash_screen').show()
+                    $('#splash_screen').spin('large', '#e6e5d9')
               ,(result) =>
                 console.log "I'm finished!"
+                $('#splash_screen').hide()
+                $('#splash_screen').spin(false)
                 if result.error
                   console.log result.errorCode, ':', result.errorMsg
                 else

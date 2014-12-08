@@ -8,6 +8,8 @@
 #= require bootstrap-colorpicker
 #= require gumhelper
 #= require gifshot
+#= require spin
+#= require jquery.spin
 #= require_self
 #= require_tree .
 

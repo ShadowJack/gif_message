@@ -11,6 +11,8 @@
 
 
 
+
+
 # for more details see: http://emberjs.com/guides/application/
 window.GifMessage = Ember.Application.create(
   LOG_TRANSITIONS: true
