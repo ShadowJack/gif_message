@@ -2,6 +2,12 @@ GifMessage.CaptureView = Ember.View.extend
   templateName: 'capture-gif'
 
   didInsertElement: ->
+    container = @get('parentView') #Ember.View.views['capture_container']
+    pubView = GifMessage.PublishView.create()
+    pubView.set('isVisible', false)
+    container.pushObject pubView
+    $('#gif_container').addClass()
+
     $('.progress').width(@get('controller.gifWidth'))
 
     slider = $('#time_slider').slider(
@@ -11,23 +17,12 @@ GifMessage.CaptureView = Ember.View.extend
       value: @get('controller.gifLength') || 2.0
       formatter: (value)-> value + ' сек.'
     )
-    slider.on('slide', (evt) =>
-      @set('controller.gifLength', evt.value)
+    slider.on('change', (evt) =>
+      console.log 'New gif length: ', evt.value.newValue
+      @set('controller.gifLength', evt.value.newValue)
     )
     colorpicker = $('#colorPicker').colorpicker().on('changeColor', (ev)->
       $('#text_preview').css('color', ev.color.toHex())
     )
     curr_color = @get('controller.gifFontColor') || '#FFF'
     $('#text_preview').css('color', curr_color)
-
-    @get('controller').on('gifIsReady', this, =>
-      publishView = GifMessage.PublishView.create()
-      container = Ember.View.views['capture_container']
-      container.pushObject publishView
-      container.removeObject this
-    )
-
-  willDestroyElement: ->
-    @get('controller').off('gifIsReady', this, =>
-      console.log 'Removed CaptureView'
-    )

@@ -3,3 +3,7 @@
     .article
       #gif_container
 
+.row
+  .col-xs-12
+    button.btn.btn-default.center-block id='back_btn' aria-label='Back' click='onBack'
+      'Назад

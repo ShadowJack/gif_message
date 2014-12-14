@@ -64,6 +64,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
             $('#backcount p').text('1')
             setTimeout(=>
               $('#backcount').slideUp()
+              $('#backcount p').text('3')
 
               progressbarClass = 'tr' + @get('gifLength')*10
               $('.progress-bar').addClass(progressbarClass)
@@ -85,7 +86,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
                 'progressCallback': (captureProgress) ->
                   if captureProgress == 1
                     $('#splash_screen').show()
-                    $('#splash_screen').spin('large', '#e6e5d9')
+                    $('#splash_screen').spin('large', '#3D332E')
               ,(result) =>
                 console.log "I'm finished!"
                 $('#splash_screen').hide()
@@ -97,7 +98,26 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
                   animatedImage = document.createElement('img')
                   animatedImage.src = image
                   @set('animatedImage', animatedImage)
-                  @trigger('gifIsReady')
+
+                  container = Ember.View.views['capture_container']
+                  captView = container.get('childViews')[0]
+                  pubView = container.get('childViews')[1]
+                  captView.set('isVisible', false)
+                  pubView.set('isVisible', true)
+
+                  $('#gif_container').empty()
+                  $('#gif_container').append(animatedImage)
+                  $('#gif_container').width(@get('controller.gifWidth'))
+                  $('#gif_container').height(@get('controller.gifHeight'))
+                  $(animatedImage).removeClass()
+                  $(animatedImage).addClass('img-thumbnail center-block')
+
+                  #reset progressBar
+                  progressbarClass = 'tr' + @get('gifLength')*10
+                  $('.progress-bar').removeClass(progressbarClass)
+                  $('.progress-bar').attr('aria-valuenow', '0')
+                  $('.progress-bar').width('0%')
+
               )
             ,700)
           ,700)
@@ -105,3 +125,11 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
       )
 
     )
+
+    onBack: ->
+      console.log 'Trying to go back to capture view'
+      container = Ember.View.views['capture_container']
+      captureView = container.get('childViews')[0]
+      publishView = container.get('childViews')[1]
+      captureView.set('isVisible', true)
+      publishView.set('isVisible', false)
