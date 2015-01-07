@@ -2,7 +2,7 @@ GifMessage.CaptureView = Ember.View.extend
   templateName: 'capture-gif'
 
   didInsertElement: ->
-    container = @get('parentView') #Ember.View.views['capture_container']
+    container = @get('parentView')
     pubView = GifMessage.PublishView.create()
     pubView.set('isVisible', false)
     container.pushObject pubView

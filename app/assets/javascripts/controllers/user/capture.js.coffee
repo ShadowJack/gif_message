@@ -1,6 +1,9 @@
 GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
   needs: 'user'
 
+  queryParams: ['access_token']
+  #TODO: проверить, приходит ли параметр от сервера, если да, то передавать его потом в запросе при сохранении фотки
+
   gifWidth: 500            # gif width on screen and image itself
   gifHeight: 375           # gif height on screen and image itself
   gifLength: 2.0           # gif time length
@@ -10,6 +13,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
   videoElement: null
   cameraStream: null
   animatedImage: null
+  imageData: null
 
   init: ->
     color = @get('controllers.user.model.gifFontColor') || '#FFF'
@@ -95,6 +99,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
                   console.log result.errorCode, ':', result.errorMsg
                 else
                   image = result.image
+                  @set('imageData', image)
                   animatedImage = document.createElement('img')
                   animatedImage.src = image
                   @set('animatedImage', animatedImage)
@@ -133,3 +138,29 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
       publishView = container.get('childViews')[1]
       captureView.set('isVisible', true)
       publishView.set('isVisible', false)
+
+    onPublishWall: ->
+      VK.api 'photos.getWallUploadServer', {}, (data) =>
+        console.log data
+        if data.error
+          return data.error
+        url = data.response.upload_url
+        $.post '/api/v1/users/' + @get("controllers.user.model").id + '/upload_wall',
+          { image: @get('imageData'), upload_url: url, access_token: @get('access_token') },
+          (photo_data) ->
+            console.log 'Resp:', photo_data
+            photo_id = photo_data.users[0].id
+            user_id = photo_data.users[0].owner_id
+            console.log 'photo' + user_id + '_' + photo_id
+            if photo_id && user_id
+              VK.api 'wall.post', {message: 'Тест', attachments: 'photo' + user_id + '_' + photo_id},
+              (response) ->
+                console.log 'Resp from wall.post: ', response
+            else
+              console.log "Can't get user_id or photo_id, sorry..."
+
+    onPublishAlbum: ->
+      $.post '/api/v1/users/' + @get("controllers.user.model").id + '/upload_album',
+        {image: @get('imageData'), access_token: @get('access_token')},
+        (photo_data) ->
+          console.log 'Photo data:', photo_data

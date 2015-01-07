@@ -42,4 +42,6 @@ Rails.application.configure do
   config.action_dispatch.default_headers = {
       'X-Frame-Options' => 'ALLOWALL'
   }
+
+  Rack::Utils.key_space_limit = 4262144
 end

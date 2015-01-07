@@ -5,5 +5,20 @@
 
 .row
   .col-xs-12
-    button.btn.btn-default.center-block id='back_btn' aria-label='Back' click='onBack'
+    button.btn.btn-default.center-block id='back_btn' aria-label='Назад' click='onBack'
       'Назад
+
+.row
+  .col-xs-8.col-xs-offset-2
+    .form
+      .form-group
+        label for='message_text'
+          'Текст сообщения:
+        textarea.form-control#message_text  placeholder='Текст сообщения'
+.row.publish_buttons
+  .col-xs-4.col-xs-offset-2
+    button.btn.btn-info.center-block id='publish_wall' aria-label='На стену' click='onPublishWall'
+      'На стену
+  .col-xs-4
+    button.btn.btn-info.center-block id='publish_private' aria-label='В сообщение' click='onPublishAlbum'
+      'В сообщение
