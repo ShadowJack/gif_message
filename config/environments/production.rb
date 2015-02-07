@@ -82,4 +82,9 @@ Rails.application.configure do
 
   # Config ember
   config.ember.variant = :production
+
+  # App will be used in iframe
+  config.action_dispatch.default_headers = {
+      'X-Frame-Options' => 'ALLOWALL'
+  }
 end
