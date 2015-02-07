@@ -2,7 +2,6 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
   needs: 'user'
 
   queryParams: ['access_token']
-  #TODO: проверить, приходит ли параметр от сервера, если да, то передавать его потом в запросе при сохранении фотки
 
   gifWidth: 500            # gif width on screen and image itself
   gifHeight: 375           # gif height on screen and image itself
@@ -139,28 +138,36 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
       captureView.set('isVisible', true)
       publishView.set('isVisible', false)
 
-    onPublishWall: ->
-      VK.api 'photos.getWallUploadServer', {}, (data) =>
-        console.log data
-        if data.error
-          return data.error
-        url = data.response.upload_url
-        $.post '/api/v1/users/' + @get("controllers.user.model").id + '/upload_wall',
-          { image: @get('imageData'), upload_url: url, access_token: @get('access_token') },
-          (photo_data) ->
-            console.log 'Resp:', photo_data
-            photo_id = photo_data.users[0].id
-            user_id = photo_data.users[0].owner_id
-            console.log 'photo' + user_id + '_' + photo_id
-            if photo_id && user_id
-              VK.api 'wall.post', {message: 'Тест', attachments: 'photo' + user_id + '_' + photo_id},
-              (response) ->
-                console.log 'Resp from wall.post: ', response
-            else
-              console.log "Can't get user_id or photo_id, sorry..."
 
-    onPublishAlbum: ->
-      $.post '/api/v1/users/' + @get("controllers.user.model").id + '/upload_album',
+    onPublish: ->
+      $('#splash_screen').show()
+      $('#splash_screen').spin('large', '#3D332E')
+      $.post '/api/v1/users/' + @get("controllers.user.model").id + '/publish',
         {image: @get('imageData'), access_token: @get('access_token')},
-        (photo_data) ->
-          console.log 'Photo data:', photo_data
+        (doc_data) ->
+          $('#splash_screen').hide()
+          $('#splash_screen').spin(false)
+          console.log 'Doc data:', doc_data
+          if doc_data.users
+            $('#doc_url').attr('href', 'https://vk.com/doc' + doc_data.users[0].owner_id + '_' + doc_data.users[0].id)
+            $('#doc_url').text('Посмотреть в документах')
+
+    onPublishWall: ->
+      $('#splash_screen').show()
+      $('#splash_screen').spin('large', '#3D332E')
+      $.post '/api/v1/users/' + @get("controllers.user.model").id + '/publish_wall',
+        { image: @get('imageData'), access_token: @get('access_token') },
+        (doc_data) ->
+          $('#splash_screen').hide()
+          $('#splash_screen').spin(false)
+          console.log 'Resp:', doc_data
+          doc_id = doc_data.users[0].id
+          owner_id = doc_data.users[0].owner_id
+          console.log 'doc' + owner_id + '_' + doc_id
+          if doc_id && owner_id
+            message = $('#message_text').val() || 'WebCamGif'
+            VK.api 'wall.post', {message: message, attachments: 'doc' + owner_id + '_' + doc_id },
+            (response) ->
+              console.log 'Resp from wall.post: ', response
+          else
+            console.log "Can't get user_id or photo_id, sorry..."

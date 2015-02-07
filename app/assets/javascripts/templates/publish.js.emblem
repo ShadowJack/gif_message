@@ -14,11 +14,17 @@
       .form-group
         label for='message_text'
           'Текст сообщения:
-        textarea.form-control#message_text  placeholder='Текст сообщения'
+        textarea.form-control#message_text  placeholder='Текст сообщения(при публикации на стену)'
 .row.publish_buttons
   .col-xs-4.col-xs-offset-2
+    button.btn.btn-info.center-block id='publish' aria-label='Сохранить' click='onPublish'
+      'В документы
+
+  .col-xs-4
     button.btn.btn-info.center-block id='publish_wall' aria-label='На стену' click='onPublishWall'
       'На стену
-  .col-xs-4
-    button.btn.btn-info.center-block id='publish_private' aria-label='В сообщение' click='onPublishAlbum'
-      'В сообщение
+
+.row
+  .col-xs-12
+    .doc-url-container.center-block
+      a id='doc_url' target='_blank'

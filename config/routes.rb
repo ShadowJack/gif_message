@@ -4,8 +4,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, param: :vk_id do
         member do
-          post 'upload_wall'
-          post 'upload_album'
+          post 'publish'
+          post 'publish_wall'
         end
         resources :gifs
       end

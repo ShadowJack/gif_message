@@ -33,60 +33,52 @@ class Api::V1::UsersController < ApplicationController
     respond_with user.destroy
   end
 
-  def upload_wall
+  def publish_wall
     found_user = user
     head :forbidden unless found_user
     app = VK::Application.new app_id: APP_ID, access_token: params[:access_token], timeout: 70
 
-    Tempfile.create(['gif_cam', '.gif'], Dir.tmpdir, 'w+b', :encoding => Encoding::ASCII_8BIT) do |tmp_file|
+    upload_url = app.docs.get_upload_server['upload_url']
+
+    Tempfile.create(['webcam_gif', '.gif'], Dir.tmpdir, 'w+b', :encoding => Encoding::ASCII_8BIT) do |tmp_file|
       image_data = Base64.decode64(params[:image]['data:image/gif;base64,'.length .. -1])
       tmp_file.write(image_data)
       tmp_file.rewind
-      puts 'Upload url: ' + params[:upload_url]
-      RestClient.post params[:upload_url], photo: tmp_file do |resp, req, result|
-        #logger.debug req.inspect
+      puts 'Upload url: ' + upload_url
+      RestClient.post upload_url, file: tmp_file do |resp, req, result|
         data = JSON.parse resp
-        #puts data.inspect
-        photo = app.photos.save_wall_photo photo: data['photo'], server: data['server'], hash: data['hash']
-        logger.debug photo.inspect
-        respond_with photo do |format|
-          format.json { render json: photo}
+        #TODO: unknown error
+        logger.debug data.inspect
+        doc = app.docs.save file: data['file'], title: 'WebCamGif', tags: 'WebCamGif,gif_cam,gif'
+        logger.debug doc.inspect
+        respond_with doc do |format|
+          format.json { render json: doc}
         end
       end
     end
   end
 
-  def upload_album
+  def publish
     found_user = user
     head :forbidden unless found_user
     app = VK::Application.new app_id: APP_ID, access_token: params[:access_token], timeout: 70
 
-    #check if current user has active album
-    if found_user.album_id == nil || found_user.album_id == ''
-      created_album = app.photos.create_album title: 'GifCam',
-                                              description: 'Gifки созданные в приложении GifCam',
-                                              privacy: 3,  # only me
-                                              comment_privacy: 0  # everyone
-      # puts created_album.inspect
-      found_user.update album_id: created_album['id']
-    end
-
     # get upload url
-    upload_url = app.photos.get_upload_server(album_id: found_user.album_id)['upload_url']
+    upload_url = app.docs.get_upload_server['upload_url']
 
-    Tempfile.create(['gif_cam', '.gif'], Dir.tmpdir, 'w+b', :encoding => Encoding::ASCII_8BIT) do |tmp_file|
+    Tempfile.create(['webcam_gif', '.gif'], Dir.tmpdir, 'w+b', :encoding => Encoding::ASCII_8BIT) do |tmp_file|
       image_data = Base64.decode64(params[:image]['data:image/gif;base64,'.length .. -1])
       tmp_file.write(image_data)
       tmp_file.rewind
       puts 'Upload url: ' + upload_url
-      RestClient.post upload_url, file1: tmp_file do |resp, req, result|
+      RestClient.post upload_url, file: tmp_file do |resp, req, result|
         #logger.debug req.inspect
         data = JSON.parse resp
         puts data.inspect
-        photo = app.photos.save photos_list: data['photos_list'], server: data['server'], hash: data['hash'], album_id: data['aid']
-        logger.debug photo.inspect
-        respond_with photo do |format|
-          format.json { render json: photo}
+        doc = app.docs.save file: data['file'], title: 'WebCamGif', tags: 'WebCamGif,gif_cam,gif'
+        logger.debug doc.inspect
+        respond_with doc do |format|
+          format.json { render json: doc}
         end
       end
     end
@@ -99,6 +91,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require('user').permit(:vk_id, :gif_length, :gif_font_color, :upload, :album_id)
+    params.require('user').permit(:vk_id, :gif_length, :gif_font_color, :upload)
   end
 end
