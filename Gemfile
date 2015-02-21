@@ -35,7 +35,7 @@ gem 'emblem-rails'
 # Use puma as an app server
 gem 'puma'
 # Use this gem to manage static assets in production
-gem 'rails_12factor'
+gem 'rails_12factor', group: :production
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
