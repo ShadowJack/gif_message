@@ -16,7 +16,7 @@ class Api::V1::UsersController < ApplicationController
     if found_user
       respond_with found_user
     else
-      respond_with :api, :v1, User.create(vk_id: params[:vk_id], gif_length: 2.0, gif_font_color: '#FFF', album_id: '')
+      respond_with :api, :v1, User.create(vk_id: params[:vk_id], gif_length: 2.0, gif_font_color: '#FFF' )
     end
   end
 
@@ -47,7 +47,6 @@ class Api::V1::UsersController < ApplicationController
       puts 'Upload url: ' + upload_url
       RestClient.post upload_url, file: tmp_file do |resp, req, result|
         data = JSON.parse resp
-        #TODO: unknown error
         logger.debug data.inspect
         doc = app.docs.save file: data['file'], title: 'WebCamGif', tags: 'WebCamGif,gif_cam,gif'
         logger.debug doc.inspect
