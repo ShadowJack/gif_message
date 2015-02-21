@@ -65,7 +65,7 @@ class Api::V1::UsersController < ApplicationController
     # get upload url
     upload_url = app.docs.get_upload_server['upload_url']
 
-    Tempfile.open['webcam_gif', '.gif'], Dir.tmpdir, 'w+b', :encoding => Encoding::ASCII_8BIT) do |tmp_file|
+    Tempfile.open(['webcam_gif', '.gif'], Dir.tmpdir, 'w+b', :encoding => Encoding::ASCII_8BIT) do |tmp_file|
       image_data = Base64.decode64(params[:image]['data:image/gif;base64,'.length .. -1])
       tmp_file.write(image_data)
       tmp_file.rewind
