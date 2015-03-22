@@ -11,7 +11,7 @@
  * file per style scope.
  *
  *= require bootstrap-slider
- *= require bootstrap-colorpicker
+ *= require colorpicker
  *= require_tree .
  *= require_self
  */
