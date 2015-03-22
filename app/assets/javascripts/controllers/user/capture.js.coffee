@@ -174,4 +174,4 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
             console.log "Can't get user_id or photo_id, sorry..."
 
     onDownload: ->
-      window.open @get('imageData').replace('image/gif', 'image/octet-stream')
+      window.location.href = @get('imageData').replace('image/gif', 'image/octet-stream')
