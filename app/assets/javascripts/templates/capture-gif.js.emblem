@@ -18,7 +18,7 @@
 .row.record
   .col-xs-4.col-xs-offset-4
     button.btn.btn-danger.center-block id='record_btn' aria-label='Record' click='onShooting' disabled='disabled'
-      span.glyphicon.glyphicon-record aria-hidden='true' click='onShooting'
+      i.fa.fa-dot-circle-o aria-hidden='true' click='onShooting'
 
 .row.controls
   .col-xs-10.col-xs-offset-1

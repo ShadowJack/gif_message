@@ -22,6 +22,7 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
 
     if !navigator.getMedia
       console.log('User media is not supported!');
+      window.alert('К сожалению ваш браузер не поддерживает запись видео с вебкамеры.')
     else
       gumHelper = window.GumHelper
       console.log 'gumHelper is ready!'
@@ -171,3 +172,6 @@ GifMessage.UserCaptureController = Ember.Controller.extend Ember.Evented,
               console.log 'Resp from wall.post: ', response
           else
             console.log "Can't get user_id or photo_id, sorry..."
+
+    onDownload: ->
+      window.open @get('imageData').replace('image/gif', 'image/octet-stream')
